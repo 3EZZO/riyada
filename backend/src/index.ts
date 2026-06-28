@@ -37,7 +37,7 @@ app.get('/api/health', (req: any, res: any) => {
 // Serve frontend static files in production
 const frontendPath = path.join(__dirname, '..', '..', 'dist');
 app.use(express.static(frontendPath));
-app.get('*', (_req: any, res: any) => {
+app.use((_req: any, res: any) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
