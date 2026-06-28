@@ -7,6 +7,25 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seed...');
 
+  // 0. Create Super Admin
+  const superAdminEmail = 'admin@riyada.com';
+  const existingSuperAdmin = await prisma.user.findUnique({ where: { email: superAdminEmail } });
+  if (!existingSuperAdmin) {
+    const hashedSuperAdminPassword = await bcrypt.hash('adminalmas', 10);
+    await prisma.user.create({
+      data: {
+        name: 'Super Admin',
+        email: superAdminEmail,
+        password: hashedSuperAdminPassword,
+        phone: '+249000000000',
+        nationalId: '0000000000',
+        role: 'ADMIN',
+        gender: 'MALE',
+      }
+    });
+    console.log('✅ Super Admin created: admin@riyada.com / adminalmas');
+  }
+
   // 1. Create Mock Universities
   const universitiesData = [
     { name: 'جامعة الخرطوم', location: 'الخرطوم' },
