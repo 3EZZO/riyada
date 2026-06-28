@@ -199,7 +199,15 @@ footer{background:var(--lapis2);border-top:0.5px solid rgba(201,149,42,0.15);pad
 @media(max-width:700px){
   .product-inner,.map-inner{grid-template-columns:1fr}
   .metrics-inner{grid-template-columns:repeat(2,1fr)}
-  .roadmap-grid{grid-template-columns:repeat(2,1fr)}
+  .roadmap-grid{grid-template-columns:1fr}
   .nav-links{display:none}
+  #topnav{padding:0.7rem 1rem}
+  .hero-stats{gap:1.5rem}
+}
+
+@media(max-width:480px){
+  .metrics-inner{grid-template-columns:1fr}
+  input, select, textarea {font-size: 16px !important;}
+  footer {padding-bottom: calc(2rem + env(safe-area-inset-bottom));}
 }
 
