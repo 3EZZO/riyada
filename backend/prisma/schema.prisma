@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name       String
+  phone      String
+  nationalId String
+  linkedStudentId Int?
+  profilePhoto    String?
+  targetUniversityId Int?
+  role       String   @default("STUDENT") // STUDENT, PARENT, LECTURER, UNIVERSITY, ADMIN
+  gender     String?  // MALE, FEMALE
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  wallet        Wallet?
+  applications  Application[] @relation("StudentApplications")
+  managedUniv   University?   @relation("UniversityAdmin")
+  enrollments   Enrollment[]
+  submissions   Submission[]
+  coursesTaught Course[]      @relation("LecturerCourses")
+  transcripts   Transcript[]
+  feedbacks     Feedback[]
+  alerts        Alert[]
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  balance   Float    @default(0.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  walletId    Int
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
+  amount      Float
+  type        String   // DEPOSIT, PAYMENT
+  description String?
+  reference   String?  
+  createdAt   DateTime @default(now())
+}
+
+model University {
+  id        Int      @id @default(autoincrement())
+  name      String
+  location  String
+  adminId   Int      @unique
+  admin     User     @relation("UniversityAdmin", fields: [adminId], references: [id])
+  showGradesToParent   Boolean @default(false)
+  showBehaviorToParent Boolean @default(false)
+  showFeesToParent     Boolean @default(true)
+  publicationMode      String  @default("HYBRID") // PUBLIC, PRIVATE, HYBRID
+  createdAt DateTime @default(now())
+
+  majors       Major[]
+  applications Application[]
+  transcripts  Transcript[]
+  schedules    Schedule[]
+  feedbacks    Feedback[]
+}
+
+model Major {
+  id           Int        @id @default(autoincrement())
+  name         String
+  tuitionFee   Float
+  universityId Int
+  university   University @relation(fields: [universityId], references: [id])
+
+  applications Application[]
+  courses      Course[]
+}
+
+model Application {
+  id               Int        @id @default(autoincrement())
+  studentId        Int
+  student          User       @relation("StudentApplications", fields: [studentId], references: [id])
+  universityId     Int
+  university       University @relation(fields: [universityId], references: [id])
+  majorId          Int
+  major            Major      @relation(fields: [majorId], references: [id])
+  status           String     @default("PENDING") 
+  universityNumber String?    
+  degreeType       String     @default("UNDERGRAD") // UNDERGRAD, POSTGRAD
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Course {
+  id          Int       @id @default(autoincrement())
+  name        String
+  code        String
+  description String?
+  majorId     Int
+  major       Major     @relation(fields: [majorId], references: [id])
+  lecturerId  Int?
+  lecturer    User?     @relation("LecturerCourses", fields: [lecturerId], references: [id])
+  
+  enrollments Enrollment[]
+  lessons     Lesson[]
+  assignments Assignment[]
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  student   User     @relation(fields: [studentId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  grade     String?  // e.g. A, B+, etc
+  status    String   @default("ACTIVE")
+}
+
+model Lesson {
+  id          Int      @id @default(autoincrement())
+  courseId    Int
+  course      Course   @relation(fields: [courseId], references: [id])
+  title       String
+  contentUrl  String?  // PDF or PPT URL
+  videoUrl    String?  // MP4 URL
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Assignment {
+  id          Int      @id @default(autoincrement())
+  courseId    Int
+  course      Course   @relation(fields: [courseId], references: [id])
+  title       String
+  description String?
+  dueDate     DateTime
+  maxScore    Int      @default(100)
+  
+  submissions Submission[]
+}
+
+model Submission {
+  id           Int        @id @default(autoincrement())
+  assignmentId Int
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  studentId    Int
+  student      User       @relation(fields: [studentId], references: [id])
+  fileUrl      String
+  score        Int?
+  feedback     String?
+  createdAt    DateTime   @default(now())
+}
+
+model Transcript {
+  id           Int        @id @default(autoincrement())
+  studentId    Int
+  student      User       @relation(fields: [studentId], references: [id])
+  universityId Int
+  university   University @relation(fields: [universityId], references: [id])
+  gpa          Float
+  sealHash     String     @unique
+  issuedAt     DateTime   @default(now())
+}
+
+model Schedule {
+  id           Int        @id @default(autoincrement())
+  universityId Int
+  university   University @relation(fields: [universityId], references: [id])
+  courseName   String
+  teacherName  String
+  day          String
+  time         String
+  createdAt    DateTime   @default(now())
+
+  alerts       Alert[]
+}
+
+model Alert {
+  id            Int      @id @default(autoincrement())
+  studentId     Int
+  student       User     @relation(fields: [studentId], references: [id])
+  scheduleId    Int
+  schedule      Schedule @relation(fields: [scheduleId], references: [id])
+  minutesBefore Int
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model Feedback {
+  id           Int        @id @default(autoincrement())
+  universityId Int
+  university   University @relation(fields: [universityId], references: [id])
+  senderId     Int
+  sender       User       @relation(fields: [senderId], references: [id])
+  type         String     // SUGGESTION, COMPLAINT, COMMENT
+  message      String
+  status       String     @default("NEW") // NEW, REVIEW, PROGRESS, COMPLETED
+  createdAt    DateTime   @default(now())
+}
