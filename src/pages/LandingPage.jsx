@@ -319,6 +319,17 @@ export default function LandingPage() {
         <div className="lbl">العائد المستهدف (س1)</div>
       </div>
     </div>
+
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', width: '100%', maxWidth: '680px', margin: '2.5rem auto 0', textAlign: 'center', direction: 'ltr' }}>
+      <div style={{ background: 'rgba(201,149,42,0.1)', border: '1px solid rgba(201,149,42,0.3)', borderRadius: '14px', padding: '1rem', backdropFilter: 'blur(8px)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+        <div style={{ color: '#C9952A', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>Founder & CEO · المؤسس والرئيس التنفيذي</div>
+        <div style={{ color: '#ffffff', fontSize: '1.15rem', fontWeight: '900', marginTop: '0.3rem' }}>Rashed Mohamed</div>
+      </div>
+      <div style={{ background: 'rgba(0,212,170,0.1)', border: '1px solid rgba(0,212,170,0.3)', borderRadius: '14px', padding: '1rem', backdropFilter: 'blur(8px)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+        <div style={{ color: '#00D4AA', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>Developer & Quantitative Strategist · المطور والاستراتيجي الكمي</div>
+        <div style={{ color: '#ffffff', fontSize: '1.15rem', fontWeight: '900', marginTop: '0.3rem' }}>Mohamed Izeldin Al Shayghey</div>
+      </div>
+    </div>
   </div>
   <div className="scroll-hint">
     <span>مرر للاستكشاف</span>
