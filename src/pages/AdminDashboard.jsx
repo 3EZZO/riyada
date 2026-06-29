@@ -44,22 +44,22 @@ export default function AdminDashboard() {
   if (!user) return null;
 
   return (
-    <div className="container" style={{ maxWidth: '1100px', paddingTop: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+    <div className="container" style={{ maxWidth: '1100px', paddingTop: 'calc(2rem + env(safe-area-inset-top))', paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--gold)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Riyadah Platform Control
           </div>
-          <h1 className="header-title" style={{ margin: 0, fontSize: '2.2rem' }}>لوحة تحكم المنصة</h1>
+          <h1 className="header-title" style={{ margin: 0, fontSize: 'clamp(1.8rem, 5vw, 2.2rem)' }}>لوحة تحكم المنصة</h1>
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <button onClick={() => { localStorage.removeItem('riyada_user'); localStorage.removeItem('riyada_token'); navigate('/'); }} className="btn-cyan" style={{ background: 'transparent', color: 'var(--red)', border: '1px solid rgba(232,89,60,0.3)' }}>
+          <button onClick={() => { localStorage.removeItem('riyada_user'); localStorage.removeItem('riyada_token'); navigate('/'); }} className="btn-cyan" style={{ background: 'transparent', color: 'var(--red)', border: '1px solid rgba(232,89,60,0.3)', padding: '8px 16px', minHeight: '44px' }}>
             <LogOut size={18} /> خروج
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
+      <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.2rem', marginBottom: '2.5rem' }}>
         <div className="menu-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <span style={{ color: 'var(--ivory3)', fontSize: '0.9rem', fontWeight: 700 }}>إجمالي الطلاب</span>
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+      <div className="dashboard-content-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         <div className="menu-card" style={{ padding: '2rem' }}>
           <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.3rem' }}>المؤسسات المضافة مؤخراً</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
