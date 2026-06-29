@@ -430,12 +430,12 @@ export default function UniversityDashboard() {
                 {feedbacks.map(f => (
                   <tr key={f.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                     <td style={{ padding: '1rem' }}>
-                      <div style={{ fontWeight: 'bold' }}>{f.student.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--ivory3)' }}>طالب</div>
+                      <div style={{ fontWeight: 'bold' }}>{f.sender?.name || 'مستخدم'}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--ivory3)' }}>{f.sender?.role === 'STUDENT' ? 'طالب' : f.sender?.role === 'GUARDIAN' ? 'ولي أمر' : 'عضو'}</div>
                     </td>
                     <td style={{ padding: '1rem' }}>{f.type === 'COMPLAINT' ? 'شكوى' : f.type === 'SUGGESTION' ? 'اقتراح' : 'استفسار'}</td>
                     <td style={{ padding: '1rem' }}>
-                      <div style={{ fontWeight: 'bold' }}>{f.subject}</div>
+                      <div style={{ fontWeight: 'bold' }}>{f.subject || (f.type === 'COMPLAINT' ? 'شكوى بخصوص الخدمات' : f.type === 'SUGGESTION' ? 'اقتراح تطوير' : 'استفسار عام')}</div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--ivory2)', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.message}</div>
                     </td>
                     <td style={{ padding: '1rem', color: 'var(--ivory3)' }}>{new Date(f.createdAt).toLocaleDateString()}</td>
